@@ -4,8 +4,13 @@ pipeline {
         stage('clone repo') { 
             steps {
                 sh "rm -rf my-app"
-                sh "git clone https://github.com/satsbit/my-app.git"
+                sh "git clone https://github.com/sathyadevops/my-app.git"
                 sh "mvn clean -f my-app"
+            }
+        }
+        stage('Compile') { 
+            steps {
+                sh "mvn compile -f my-app"
             }
         }
         stage('Test') { 
@@ -16,6 +21,12 @@ pipeline {
         stage('package') { 
             steps {
                 sh "mvn package -f my-app"
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                sh "scp -i /root/.ssh/id_rsa /root/.jenkins/workspace/PIPE_LINE1/my-app/target/my-app-1.0-SNAPSHOT.jar 172.31.47.160:/opt"
+                sh "echo File Deployed"
             }
         }
     }
